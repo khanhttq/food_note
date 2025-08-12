@@ -798,7 +798,7 @@
    <!-- 🔥 STEP 2: SEARCH WITH POPUP -->
    <div class="card">
      <div class="search-section" id="searchSection">
-       <div class="section-title">2. Tìm kiếm thông tin</div>
+       <div class="section-title">2. Tìm kiếm thông tin | Search </Search></div>
        
        <!-- 🔥 SEARCH INPUT -->
        <div class="search-input-group">
@@ -817,27 +817,27 @@
          </div>
          <button id="searchBtn" class="search-btn" disabled>
            <div id="searchLoading" class="loading"></div>
-           <span id="searchBtnText">🔍 Tìm</span>
+           <span id="searchBtnText">🔍 Search</span>
          </button>
        </div>
 
        <!-- 🔥 SELECTED INFO DISPLAY -->
        <div class="selected-info" id="selectedInfo">
          <div class="selected-header">
-           <span class="selected-title">✅ Đã chọn</span>
-           <button id="clearBtn" class="clear-btn">❌ Xóa</button>
+           <span class="selected-title">✅ Đã chọn | Selected:</span>
+           <button id="clearBtn" class="clear-btn">Xóa</button>
          </div>
          <div class="selected-details">
            <div class="selected-field">
-             <span class="selected-field-label">👤 Tên:</span>
+             <span class="selected-field-label">👤 Tên| Name:</span>
              <span id="selectedName" class="selected-field-value">-</span>
            </div>
            <div class="selected-field">
-             <span class="selected-field-label">📧 Email:</span>
+             <span class="selected-field-label">📧 Email| Email:</span>
              <span id="selectedEmail" class="selected-field-value">-</span>
            </div>
            <div class="selected-field">
-             <span class="selected-field-label">💳 Thẻ:</span>
+             <span class="selected-field-label">💳 Thẻ| Card:</span>
              <span id="selectedCard" class="selected-field-value">-</span>
            </div>
          </div>
@@ -851,7 +851,7 @@
              <div class="checkmark"></div>
            </label>
            <label for="manualCheckbox" class="checkbox-label">
-             ✏️ Không có trong danh sách - Tự nhập thông tin
+             Không có trong danh sách - Tự nhập thông tin
            </label>
          </div>
          <input 
@@ -867,19 +867,19 @@
    <!-- 🔥 STEP 3: REASON SELECTION -->
    <div class="card">
      <div class="reason-section" id="reasonSection">
-       <div class="section-title">3. Chọn lý do</div>
+       <div class="section-title">3. Chọn lý do| Reason Selection</div>
        <div class="reason-options">
          <div class="reason-option" data-reason="forgot_card">
            <div class="reason-icon">🤦‍♂️</div>
-           <div class="reason-text">Quên mang thẻ</div>
+           <div class="reason-text">Quên mang thẻ | Forgot card</div>
          </div>
          <div class="reason-option" data-reason="broken_card">
            <div class="reason-icon">💳</div>
-           <div class="reason-text">Thẻ lỗi</div>
+           <div class="reason-text">Thẻ lỗi | Broken card</div>
          </div>
          <div class="reason-option" data-reason="no_card">
            <div class="reason-icon">❓</div>
-           <div class="reason-text">Chưa có thẻ</div>
+           <div class="reason-text">Chưa có thẻ | No card</div>
          </div>
        </div>
      </div>
@@ -888,28 +888,28 @@
    <!-- 🔥 PREVIEW -->
    <div class="preview-section" id="previewSection">
      <div class="preview-header">
-       <span class="preview-label">Thông tin sẽ gửi</span>
-       <span class="preview-status">✅ Sẵn sàng</span>
+       <span class="preview-label">Thông tin của bạn| Your information</span>
+       <span class="preview-status">✅</span>
      </div>
      <div class="preview-content">
        <div class="preview-item">
-         <div class="preview-field-label">👤 Loại:</div>
+         <div class="preview-field-label">👤 Loại| Type:</div>
          <div id="previewType" class="preview-field-value">-</div>
        </div>
        <div class="preview-item">
-         <div class="preview-field-label">📝 Tên:</div>
+         <div class="preview-field-label">📝 Tên| Name:</div>
          <div id="previewName" class="preview-field-value">-</div>
        </div>
        <div class="preview-item">
-         <div class="preview-field-label">📧 Email:</div>
+         <div class="preview-field-label">📧 Email| Email:</div>
          <div id="previewEmail" class="preview-field-value">-</div>
        </div>
        <div class="preview-item">
-         <div class="preview-field-label">💳 Thẻ:</div>
+         <div class="preview-field-label">💳 Thẻ| Card:</div>
          <div id="previewCard" class="preview-field-value">-</div>
        </div>
        <div class="preview-item">
-         <div class="preview-field-label">❓ Lý do:</div>
+         <div class="preview-field-label">❓ Lý do| Reason:</div>
          <div id="previewReason" class="preview-field-value">-</div>
        </div>
      </div>
@@ -1204,7 +1204,7 @@
        isSearching = true;
        searchBtn.disabled = true;
        searchLoading.classList.add('show');
-       searchBtnText.textContent = 'Đang tìm...';
+       searchBtnText.textContent = 'Searching...';
 
        const result = await SheetsAPI.searchByType(selectedType, query);
        
@@ -1223,7 +1223,7 @@
        
      } catch (error) {
        console.error('Search error:', error);
-       showToast('Lỗi tìm kiếm: ' + error.message, 'error');
+       showToast('Search error: ' + error.message, 'error');
        
        // Show manual entry on error
        manualEntrySection.classList.add('show');
@@ -1231,7 +1231,7 @@
        isSearching = false;
        searchBtn.disabled = false;
        searchLoading.classList.remove('show');
-       searchBtnText.textContent = '🔍 Tìm';
+       searchBtnText.textContent = '🔍 Search';
      }
    };
 

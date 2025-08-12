@@ -907,7 +907,7 @@
                  if (iframe.parentNode) document.body.removeChild(iframe);
                } catch (e) {}
              }, 1000);
-             resolve({ success: true, message: 'Check-in thành công!' });
+             resolve({ success: true, message: 'Success!' });
            }
          });
          
@@ -918,7 +918,7 @@
                if (form.parentNode) document.body.removeChild(form);
                if (iframe.parentNode) document.body.removeChild(iframe);
              } catch (e) {}
-             resolve({ success: true, message: 'Check-in đã gửi' });
+             resolve({ success: true, message: 'Success!' });
            }
          }, 10000);
          
@@ -1251,7 +1251,7 @@
 
      isSubmitting = true;
      submitBtn.disabled = true;
-     submitText.textContent = 'Đang gửi...';
+     submitText.textContent = 'Sending...';
      submitIcon.textContent = '⏳';
      showLoading(true);
 

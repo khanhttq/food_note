@@ -6,7 +6,7 @@
  <meta name="apple-mobile-web-app-capable" content="yes" />
  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
  <meta name="theme-color" content="#111827" />
- <title>Check-in App</title>
+ <title>Food Card</title>
  <style>
    :root {
      --primary: #111827;
@@ -166,12 +166,14 @@
      pointer-events: auto;
    }
 
-   .input-group {
-     position: relative;
+   .search-input-group {
+     display: flex;
+     gap: var(--space-3);
      margin-bottom: var(--space-4);
    }
 
-   .input-wrapper {
+   .search-input-wrapper {
+     flex: 1;
      position: relative;
      display: flex;
      align-items: center;
@@ -183,12 +185,12 @@
      min-height: var(--tap-target);
    }
 
-   .input-wrapper:focus-within {
+   .search-input-wrapper:focus-within {
      border-color: var(--border-focus);
      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
    }
 
-   .input {
+   .search-input {
      flex: 1;
      border: none;
      outline: none;
@@ -199,108 +201,112 @@
      font-size: 16px;
    }
 
-   .input::placeholder {
+   .search-input::placeholder {
      color: var(--text-muted);
    }
 
-   .search-status {
+   .search-btn {
+     background: var(--accent);
+     color: white;
+     border: none;
+     border-radius: var(--radius);
+     padding: 0 var(--space-4);
+     font-size: var(--text-sm);
+     font-weight: 600;
+     min-height: var(--tap-target);
+     cursor: pointer;
+     transition: all 0.2s ease;
      display: flex;
      align-items: center;
      gap: var(--space-2);
-     padding-right: var(--space-2);
-   }
-
-   .loading {
-     width: 16px;
-     height: 16px;
-     border: 2px solid var(--border);
-     border-top-color: var(--accent);
-     border-radius: 50%;
-     animation: spin 0.8s linear infinite;
-     display: none;
-   }
-
-   .loading.show { display: block; }
-
-   .badge {
-     font-size: var(--text-xs);
-     color: var(--text-soft);
-     font-weight: 500;
      white-space: nowrap;
    }
 
-   @keyframes spin {
-     to { transform: rotate(360deg); }
+   .search-btn:hover {
+     background: #2563eb;
    }
 
-   /* 🔥 DROPDOWN */
-   .dropdown {
-     position: relative;
+   .search-btn:active {
+     transform: scale(0.98);
    }
 
-   .dropdown-menu {
-     position: absolute;
-     top: 100%;
-     left: 0;
-     right: 0;
-     background: var(--bg-card);
-     border: 1px solid var(--border);
+   .search-btn:disabled {
+     opacity: 0.5;
+     cursor: not-allowed;
+     transform: none;
+   }
+
+   /* 🔥 SELECTED INFO DISPLAY */
+   .selected-info {
+     background: #f0f9ff;
+     border: 2px solid var(--accent);
      border-radius: var(--radius);
-     box-shadow: var(--shadow-lg);
-     max-height: 40vh;
-     overflow-y: auto;
-     z-index: 50;
-     margin-top: var(--space-2);
+     padding: var(--space-4);
+     margin-bottom: var(--space-4);
      display: none;
-     -webkit-overflow-scrolling: touch;
    }
 
-   .dropdown-menu.show {
+   .selected-info.show {
      display: block;
+     animation: slideIn 0.3s ease;
    }
 
-   .menu-item {
-     padding: var(--input-padding);
-     border-bottom: 1px solid var(--border);
+   .selected-header {
+     display: flex;
+     justify-content: space-between;
+     align-items: center;
+     margin-bottom: var(--space-3);
+   }
+
+   .selected-title {
+     font-size: var(--text-sm);
+     font-weight: 600;
+     color: var(--accent);
+   }
+
+   .clear-btn {
+     background: var(--danger);
+     color: white;
+     border: none;
+     border-radius: var(--radius-sm);
+     padding: var(--space-1) var(--space-3);
+     font-size: var(--text-xs);
+     font-weight: 600;
      cursor: pointer;
-     transition: background-color 0.15s ease;
-     min-height: var(--tap-target);
+     transition: all 0.2s ease;
+   }
+
+   .clear-btn:active {
+     transform: scale(0.95);
+   }
+
+   .selected-details {
      display: flex;
      flex-direction: column;
-     justify-content: center;
+     gap: var(--space-2);
    }
 
-   .menu-item:last-child {
-     border-bottom: none;
+   .selected-field {
+     display: flex;
+     justify-content: space-between;
+     align-items: center;
    }
 
-   .menu-item:active,
-   .menu-item.active {
-     background: var(--bg-soft);
-   }
-
-   .menu-item-name {
-     font-weight: 600;
-     font-size: var(--text-base);
-     color: var(--text);
-     margin-bottom: var(--space-1);
-   }
-
-   .menu-item-meta {
+   .selected-field-label {
      font-size: var(--text-sm);
      color: var(--text-soft);
+     font-weight: 500;
    }
 
-   .highlight {
-     background: #fef3c7;
+   .selected-field-value {
+     font-size: var(--text-sm);
+     color: var(--text);
      font-weight: 600;
-     padding: 1px 2px;
-     border-radius: 2px;
    }
 
-   /* 🔥 NOT FOUND OPTION */
-   .not-found-section {
-     border: 1px solid var(--border);
+   /* 🔥 MANUAL ENTRY OPTION */
+   .manual-entry-section {
+     border: 1px dashed var(--border);
      border-radius: var(--radius);
      padding: var(--space-4);
      margin-bottom: var(--space-4);
@@ -308,14 +314,9 @@
      display: none;
    }
 
-   .not-found-section.show {
+   .manual-entry-section.show {
      display: block;
      animation: fadeIn 0.3s ease;
-   }
-
-   @keyframes fadeIn {
-     from { opacity: 0; transform: translateY(-10px); }
-     to { opacity: 1; transform: translateY(0); }
    }
 
    .checkbox-wrapper {
@@ -386,6 +387,116 @@
      border-color: var(--accent);
    }
 
+   /* 🔥 SEARCH POPUP */
+   .search-popup {
+     position: fixed;
+     top: 0;
+     left: 0;
+     right: 0;
+     bottom: 0;
+     background: rgba(0, 0, 0, 0.5);
+     z-index: 100;
+     display: none;
+     align-items: center;
+     justify-content: center;
+     padding: var(--container-padding);
+   }
+
+   .search-popup.show {
+     display: flex;
+     animation: fadeIn 0.3s ease;
+   }
+
+   .popup-content {
+     background: var(--bg-card);
+     border-radius: var(--radius-lg);
+     box-shadow: var(--shadow-lg);
+     width: 100%;
+     max-width: 500px;
+     max-height: 70vh;
+     overflow: hidden;
+     display: flex;
+     flex-direction: column;
+   }
+
+   .popup-header {
+     padding: var(--space-4);
+     border-bottom: 1px solid var(--border);
+     display: flex;
+     justify-content: space-between;
+     align-items: center;
+   }
+
+   .popup-title {
+     font-size: var(--text-lg);
+     font-weight: 600;
+     color: var(--text);
+   }
+
+   .popup-close {
+     background: none;
+     border: none;
+     font-size: var(--text-xl);
+     cursor: pointer;
+     color: var(--text-muted);
+     padding: var(--space-2);
+     line-height: 1;
+   }
+
+   .popup-body {
+     padding: var(--space-4);
+     overflow-y: auto;
+     flex: 1;
+   }
+
+   .search-results {
+     display: flex;
+     flex-direction: column;
+     gap: var(--space-2);
+   }
+
+   .result-item {
+     padding: var(--space-4);
+     border: 1px solid var(--border);
+     border-radius: var(--radius);
+     cursor: pointer;
+     transition: all 0.2s ease;
+     background: var(--bg);
+   }
+
+   .result-item:hover {
+     border-color: var(--accent);
+     background: #f0f9ff;
+   }
+
+   .result-item:active {
+     transform: scale(0.98);
+   }
+
+   .result-name {
+     font-weight: 600;
+     font-size: var(--text-base);
+     color: var(--text);
+     margin-bottom: var(--space-1);
+   }
+
+   .result-meta {
+     font-size: var(--text-sm);
+     color: var(--text-soft);
+     line-height: 1.4;
+   }
+
+   .no-results {
+     text-align: center;
+     padding: var(--space-8);
+     color: var(--text-muted);
+   }
+
+   .no-results-icon {
+     font-size: var(--text-2xl);
+     margin-bottom: var(--space-3);
+   }
+
    /* 🔥 REASON SELECTOR */
    .reason-section {
      opacity: 0.5;
@@ -454,6 +565,11 @@
    @keyframes slideIn {
      from { opacity: 0; transform: translateY(-10px); }
      to { opacity: 1; transform: translateY(0); }
+   }
+
+   @keyframes fadeIn {
+     from { opacity: 0; }
+     to { opacity: 1; }
    }
 
    .preview-header {
@@ -579,7 +695,7 @@
      transform: translateY(100px);
      opacity: 0;
      transition: all 0.3s ease;
-     z-index: 100;
+     z-index: 200;
      text-align: center;
      font-weight: 500;
    }
@@ -601,6 +717,23 @@
      background: var(--warning);
    }
 
+   /* 🔥 LOADING INDICATOR */
+   .loading {
+     width: 16px;
+     height: 16px;
+     border: 2px solid currentColor;
+     border-top-color: transparent;
+     border-radius: 50%;
+     animation: spin 0.8s linear infinite;
+     display: none;
+   }
+
+   .loading.show { display: block; }
+
+   @keyframes spin {
+     to { transform: rotate(360deg); }
+   }
+
    /* Mobile optimizations */
    input, select, textarea {
      font-size: 16px !important;
@@ -612,11 +745,11 @@
      appearance: none;
    }
 
-   button, .menu-item, .btn, .type-label, .reason-option {
+   button, .btn, .type-label, .reason-option, .result-item {
      min-height: 48px;
    }
 
-   .btn, .menu-item, .preview-section, .type-label, .reason-option {
+   .btn, .type-label, .reason-option, .result-item {
      -webkit-touch-callout: none;
      -webkit-user-select: none;
      user-select: none;
@@ -636,7 +769,7 @@
 
    <!-- 🔥 STEP 1: TYPE SELECTION -->
    <div class="card">
-     <div class="section-title">1. Chọn đối tượng | Select type</div>
+     <div class="section-title">1. Chọn loại người dùng</div>
      <div class="type-selector">
        <div class="type-option">
          <input type="radio" name="userType" value="staff" id="typeStaff" class="type-input">
@@ -662,42 +795,63 @@
      </div>
    </div>
 
-   <!-- 🔥 STEP 2: SEARCH -->
+   <!-- 🔥 STEP 2: SEARCH WITH POPUP -->
    <div class="card">
      <div class="search-section" id="searchSection">
-       <div class="section-title">2. Tìm kiếm thông tin | Search</div>
-       <div class="input-group">
-         <div class="dropdown">
-           <div class="input-wrapper">
-             <input 
-               id="searchInput"
-               class="input" 
-               type="text" 
-               placeholder="Nhập tên, email hoặc mã thẻ..."
-               autocomplete="off"
-               autocapitalize="off"
-               autocorrect="off"
-               spellcheck="false"
-               disabled
-             />
-             <div class="search-status">
-               <div id="loading" class="loading"></div>
-               <span id="badge" class="badge"></span>
-             </div>
+       <div class="section-title">2. Tìm kiếm thông tin</div>
+       
+       <!-- 🔥 SEARCH INPUT -->
+       <div class="search-input-group">
+         <div class="search-input-wrapper">
+           <input 
+             id="searchInput"
+             class="search-input" 
+             type="text" 
+             placeholder="Nhập tên, email hoặc mã thẻ..."
+             autocomplete="off"
+             autocapitalize="off"
+             autocorrect="off"
+             spellcheck="false"
+             disabled
+           />
+         </div>
+         <button id="searchBtn" class="search-btn" disabled>
+           <div id="searchLoading" class="loading"></div>
+           <span id="searchBtnText">🔍 Tìm</span>
+         </button>
+       </div>
+
+       <!-- 🔥 SELECTED INFO DISPLAY -->
+       <div class="selected-info" id="selectedInfo">
+         <div class="selected-header">
+           <span class="selected-title">✅ Đã chọn</span>
+           <button id="clearBtn" class="clear-btn">❌ Xóa</button>
+         </div>
+         <div class="selected-details">
+           <div class="selected-field">
+             <span class="selected-field-label">👤 Tên:</span>
+             <span id="selectedName" class="selected-field-value">-</span>
            </div>
-           <div id="dropdownMenu" class="dropdown-menu"></div>
+           <div class="selected-field">
+             <span class="selected-field-label">📧 Email:</span>
+             <span id="selectedEmail" class="selected-field-value">-</span>
+           </div>
+           <div class="selected-field">
+             <span class="selected-field-label">💳 Thẻ:</span>
+             <span id="selectedCard" class="selected-field-value">-</span>
+           </div>
          </div>
        </div>
 
-       <!-- 🔥 NOT FOUND OPTION -->
-       <div class="not-found-section" id="notFoundSection">
+       <!-- 🔥 MANUAL ENTRY OPTION -->
+       <div class="manual-entry-section" id="manualEntrySection">
          <div class="checkbox-wrapper">
            <label class="checkbox">
-             <input type="checkbox" id="notFoundCheckbox">
+             <input type="checkbox" id="manualCheckbox">
              <div class="checkmark"></div>
            </label>
-           <label for="notFoundCheckbox" class="checkbox-label">
-             ❌ Không có trong danh sách
+           <label for="manualCheckbox" class="checkbox-label">
+             ✏️ Không có trong danh sách - Tự nhập thông tin
            </label>
          </div>
          <input 
@@ -713,19 +867,19 @@
    <!-- 🔥 STEP 3: REASON SELECTION -->
    <div class="card">
      <div class="reason-section" id="reasonSection">
-       <div class="section-title">3. Chọn lý do | Select reason</div>
+       <div class="section-title">3. Chọn lý do</div>
        <div class="reason-options">
          <div class="reason-option" data-reason="forgot_card">
            <div class="reason-icon">🤦‍♂️</div>
-           <div class="reason-text">Quên mang thẻ | Forgot card</div>
+           <div class="reason-text">Quên mang thẻ</div>
          </div>
          <div class="reason-option" data-reason="broken_card">
            <div class="reason-icon">💳</div>
-           <div class="reason-text">Thẻ lỗi | Broken card</div>
+           <div class="reason-text">Thẻ lỗi</div>
          </div>
          <div class="reason-option" data-reason="no_card">
            <div class="reason-icon">❓</div>
-           <div class="reason-text">Chưa có thẻ | No card</div>
+           <div class="reason-text">Chưa có thẻ</div>
          </div>
        </div>
      </div>
@@ -734,16 +888,16 @@
    <!-- 🔥 PREVIEW -->
    <div class="preview-section" id="previewSection">
      <div class="preview-header">
-       <span class="preview-label">Thông tin của bạn | Your information</span>
-       <span class="preview-status">✅</span>
+       <span class="preview-label">Thông tin sẽ gửi</span>
+       <span class="preview-status">✅ Sẵn sàng</span>
      </div>
      <div class="preview-content">
        <div class="preview-item">
-         <div class="preview-field-label">👤 Loại | Type:</div>
+         <div class="preview-field-label">👤 Loại:</div>
          <div id="previewType" class="preview-field-value">-</div>
        </div>
        <div class="preview-item">
-         <div class="preview-field-label">📝 Tên | Name:</div>
+         <div class="preview-field-label">📝 Tên:</div>
          <div id="previewName" class="preview-field-value">-</div>
        </div>
        <div class="preview-item">
@@ -751,11 +905,11 @@
          <div id="previewEmail" class="preview-field-value">-</div>
        </div>
        <div class="preview-item">
-         <div class="preview-field-label">💳 Thẻ | Card:</div>
+         <div class="preview-field-label">💳 Thẻ:</div>
          <div id="previewCard" class="preview-field-value">-</div>
        </div>
        <div class="preview-item">
-         <div class="preview-field-label">❓ Lý do | Reason:</div>
+         <div class="preview-field-label">❓ Lý do:</div>
          <div id="previewReason" class="preview-field-value">-</div>
        </div>
      </div>
@@ -767,6 +921,21 @@
        <span id="submitText">SEND</span>
        <span id="submitIcon">🚀</span>
      </button>
+   </div>
+ </div>
+
+ <!-- 🔥 SEARCH POPUP -->
+ <div class="search-popup" id="searchPopup">
+   <div class="popup-content">
+     <div class="popup-header">
+       <div class="popup-title">🔍 Kết quả tìm kiếm | Results</div>
+       <button id="popupClose" class="popup-close">×</button>
+     </div>
+     <div class="popup-body">
+       <div id="searchResults" class="search-results">
+         <!-- Search results will be populated here -->
+       </div>
+     </div>
    </div>
  </div>
 
@@ -782,14 +951,21 @@
    let isManualEntry = false;
    let selectedReason = null;
    let isSubmitting = false;
-   let searchCache = new Map();
+   let isSearching = false;
 
    // DOM elements
    const searchSection = document.getElementById('searchSection');
    const searchInput = document.getElementById('searchInput');
-   const dropdownMenu = document.getElementById('dropdownMenu');
-   const notFoundSection = document.getElementById('notFoundSection');
-   const notFoundCheckbox = document.getElementById('notFoundCheckbox');
+   const searchBtn = document.getElementById('searchBtn');
+   const searchLoading = document.getElementById('searchLoading');
+   const searchBtnText = document.getElementById('searchBtnText');
+   const selectedInfo = document.getElementById('selectedInfo');
+   const selectedName = document.getElementById('selectedName');
+   const selectedEmail = document.getElementById('selectedEmail');
+   const selectedCard = document.getElementById('selectedCard');
+   const clearBtn = document.getElementById('clearBtn');
+   const manualEntrySection = document.getElementById('manualEntrySection');
+   const manualCheckbox = document.getElementById('manualCheckbox');
    const manualInput = document.getElementById('manualInput');
    const reasonSection = document.getElementById('reasonSection');
    const previewSection = document.getElementById('previewSection');
@@ -797,9 +973,10 @@
    const submitBtn = document.getElementById('submitBtn');
    const submitText = document.getElementById('submitText');
    const submitIcon = document.getElementById('submitIcon');
-   const loading = document.getElementById('loading');
-   const badge = document.getElementById('badge');
    const toast = document.getElementById('toast');
+   const searchPopup = document.getElementById('searchPopup');
+   const popupClose = document.getElementById('popupClose');
+   const searchResults = document.getElementById('searchResults');
 
    // Preview elements
    const previewType = document.getElementById('previewType');
@@ -928,10 +1105,6 @@
    }
 
    // 🔥 UTILITY FUNCTIONS
-   const showLoading = (show = true) => {
-     loading.classList.toggle('show', show);
-   };
-
    const showToast = (message, type = 'default') => {
      toast.textContent = message;
      toast.className = `toast ${type}`;
@@ -942,33 +1115,10 @@
      }, 3000);
    };
 
-   const normalize = (str) => {
-     if (!str) return '';
-     return str.toString()
-       .normalize('NFD')
-       .replace(/[\u0300-\u036f]/g, '')
-       .replace(/đ/g, 'd')
-       .replace(/Đ/g, 'd')
-       .toLowerCase()
-       .trim();
-   };
-
    const highlightText = (text, query) => {
      if (!query || !text) return text || '(Không có tên)';
      const regex = new RegExp(`(${query.split(' ').filter(w => w.length > 1).join('|')})`, 'gi');
-     return text.replace(regex, '<span class="highlight">$1</span>');
-   };
-
-   const formatRecord = (record) => {
-     // Display more comprehensive info
-     const parts = [
-       record.name,
-       record.email, 
-       record.card,
-       record.staff_number,
-       record.card_number
-     ].filter(Boolean);
-     return parts.join(' | ');
+     return text.replace(regex, '<span style="background: #fef3c7; font-weight: 600;">$1</span>');
    };
 
    // 🔥 UI STATE MANAGEMENT
@@ -985,7 +1135,8 @@
    };
 
    const updatePreview = () => {
-     const hasData = selectedType && (selectedRecord || (isManualEntry && manualInput.value.trim())) && selectedReason;
+     const hasPersonInfo = selectedRecord || (isManualEntry && manualInput.value.trim());
+     const hasData = selectedType && hasPersonInfo && selectedReason;
      
      if (hasData) {
        previewSection.classList.add('show');
@@ -1034,33 +1185,38 @@
    };
 
    // 🔥 SEARCH FUNCTIONALITY
-   const performSearch = async (query) => {
-     if (!selectedType || !query || query.length < 2) {
-       dropdownMenu.classList.remove('show');
-       badge.textContent = '';
+   const performSearch = async () => {
+     const query = searchInput.value.trim();
+     
+     if (!selectedType) {
+       showToast('Vui lòng chọn loại người dùng trước', 'error');
        return;
      }
 
-     const cacheKey = `${selectedType}:${query}`;
-     if (searchCache.has(cacheKey)) {
-       renderResults(searchCache.get(cacheKey), query);
+     if (!query || query.length < 2) {
+       showToast('Vui lòng nhập ít nhất 2 ký tự', 'error');
        return;
      }
+
+     if (isSearching) return;
 
      try {
-       showLoading(true);
+       isSearching = true;
+       searchBtn.disabled = true;
+       searchLoading.classList.add('show');
+       searchBtnText.textContent = 'Đang tìm...';
+
        const result = await SheetsAPI.searchByType(selectedType, query);
        
-       searchCache.set(cacheKey, result.results || []);
-       renderResults(result.results || [], query);
-       badge.textContent = result.count ? `${result.count} kết quả` : 'Không tìm thấy';
+       // Show popup với results
+       showSearchPopup(result.results || [], query);
        
-       // Show not found option if no results
+       // Show manual entry option if no results
        if (!result.results || result.results.length === 0) {
-         notFoundSection.classList.add('show');
+         manualEntrySection.classList.add('show');
        } else {
-         notFoundSection.classList.remove('show');
-         notFoundCheckbox.checked = false;
+         manualEntrySection.classList.remove('show');
+         manualCheckbox.checked = false;
          isManualEntry = false;
          manualInput.classList.remove('show');
        }
@@ -1068,80 +1224,112 @@
      } catch (error) {
        console.error('Search error:', error);
        showToast('Lỗi tìm kiếm: ' + error.message, 'error');
-       badge.textContent = 'Lỗi tìm kiếm';
+       
+       // Show manual entry on error
+       manualEntrySection.classList.add('show');
      } finally {
-       showLoading(false);
+       isSearching = false;
+       searchBtn.disabled = false;
+       searchLoading.classList.remove('show');
+       searchBtnText.textContent = '🔍 Tìm';
      }
    };
 
-   const renderResults = (results, query) => {
-     const fragment = document.createDocumentFragment();
+   // 🔥 SEARCH POPUP FUNCTIONALITY
+   const showSearchPopup = (results, query) => {
+     // Clear previous results
+     searchResults.innerHTML = '';
      
-     results.forEach((record, index) => {
-       const item = document.createElement('div');
-       item.className = 'menu-item';
-       item.setAttribute('data-index', index);
-       
-       const name = highlightText(record.name, query);
-       const email = highlightText(record.email, query);
-       const card = highlightText(record.card, query);
-       const staffNumber = highlightText(record.staff_number, query);
-       const cardNumber = highlightText(record.card_number, query);
-       
-       // Build meta info từ các trường có dữ liệu
-       const metaParts = [];
-       if (email) metaParts.push(`📧 ${email}`);
-       if (card) metaParts.push(`💳 ${card}`);
-       if (staffNumber) metaParts.push(`👤 ${staffNumber}`);
-       if (cardNumber) metaParts.push(`🆔 ${cardNumber}`);
-       
-       const meta = metaParts.join(' • ');
-       
-       item.innerHTML = `
-         <div class="menu-item-name">${name}</div>
-         ${meta ? `<div class="menu-item-meta">${meta}</div>` : ''}
+     if (results.length === 0) {
+       // No results
+       const noResults = document.createElement('div');
+       noResults.className = 'no-results';
+       noResults.innerHTML = `
+         <div class="no-results-icon">😕</div>
+         <div>Không tìm thấy kết quả cho "${query}"</div>
+         <div style="margin-top: 8px; font-size: 14px; color: #6b7280;">
+           Bạn có thể tự nhập thông tin bên dưới
+         </div>
        `;
-       
-       item.addEventListener('click', (e) => {
-         e.preventDefault();
-         selectRecord(record);
-       });
-       
-       fragment.appendChild(item);
-     });
-
-     dropdownMenu.innerHTML = '';
-     dropdownMenu.appendChild(fragment);
-     
-     if (results.length > 0) {
-       dropdownMenu.classList.add('show');
+       searchResults.appendChild(noResults);
      } else {
-       dropdownMenu.classList.remove('show');
+       // Show results
+       results.forEach(record => {
+         const resultItem = document.createElement('div');
+         resultItem.className = 'result-item';
+         
+         const name = highlightText(record.name, query);
+         const email = highlightText(record.email, query);
+         const card = highlightText(record.card, query);
+         const staffNumber = highlightText(record.staff_number, query);
+         const cardNumber = highlightText(record.card_number, query);
+         
+         // Build meta info
+         const metaParts = [];
+         if (email) metaParts.push(`📧 ${email}`);
+         if (card) metaParts.push(`💳 ${card}`);
+         if (staffNumber) metaParts.push(`👤 ${staffNumber}`);
+         if (cardNumber) metaParts.push(`🆔 ${cardNumber}`);
+         
+         const meta = metaParts.join(' • ');
+         
+         resultItem.innerHTML = `
+           <div class="result-name">${name}</div>
+           ${meta ? `<div class="result-meta">${meta}</div>` : ''}
+         `;
+         
+         resultItem.addEventListener('click', () => {
+           selectRecord(record);
+           closeSearchPopup();
+         });
+         
+         searchResults.appendChild(resultItem);
+       });
      }
+     
+     // Show popup
+     searchPopup.classList.add('show');
+   };
+
+   const closeSearchPopup = () => {
+     searchPopup.classList.remove('show');
    };
 
    const selectRecord = (record) => {
      selectedRecord = record;
-     searchInput.value = formatRecord(record);
-     dropdownMenu.classList.remove('show');
-     notFoundSection.classList.remove('show');
-     notFoundCheckbox.checked = false;
+     
+     // Update selected info display
+     selectedName.textContent = record.name || '-';
+     selectedEmail.textContent = record.email || '-';
+     selectedCard.textContent = `${record.card || '-'} ${record.card_number ? '/ ' + record.card_number : ''}`.trim();
+     
+     // Show selected info
+     selectedInfo.classList.add('show');
+     
+     // Hide manual entry
+     manualEntrySection.classList.remove('show');
+     manualCheckbox.checked = false;
      isManualEntry = false;
      manualInput.classList.remove('show');
      
+     // Enable reason section
      enableSection(reasonSection, true);
      updatePreview();
    };
 
-   const debounce = (func, delay = 300) => {
-     let timeoutId;
-     return (...args) => {
-       clearTimeout(timeoutId);
-       timeoutId = setTimeout(() => func.apply(null, args), delay);
-     };
+   const clearSelection = () => {
+     selectedRecord = null;
+     selectedInfo.classList.remove('show');
+     
+     // Reset reason selection if no manual entry
+     if (!isManualEntry) {
+       enableSection(reasonSection, false);
+       selectedReason = null;
+       document.querySelectorAll('.reason-option').forEach(opt => opt.classList.remove('selected'));
+     }
+     
+     updatePreview();
    };
-
-   const debouncedSearch = debounce(performSearch, 300);
 
    // 🔥 EVENT LISTENERS
 
@@ -1155,11 +1343,12 @@
        enableSection(searchSection, true);
        searchInput.focus();
        
-       // Reset search
-       searchInput.value = '';
-       selectedRecord = null;
-       dropdownMenu.classList.remove('show');
-       notFoundSection.classList.remove('show');
+       // Reset everything else
+       clearSelection();
+       manualEntrySection.classList.remove('show');
+       manualCheckbox.checked = false;
+       isManualEntry = false;
+       manualInput.classList.remove('show');
        
        // Reset subsequent sections
        enableSection(reasonSection, false);
@@ -1171,39 +1360,37 @@
      });
    });
 
-   // Search input
-   searchInput.addEventListener('input', (e) => {
-     const query = e.target.value.trim();
-     selectedRecord = null;
-     debouncedSearch(query);
-     updatePreview();
-   });
+   // Search button
+   searchBtn.addEventListener('click', performSearch);
 
-   searchInput.addEventListener('focus', () => {
-     if (dropdownMenu.children.length > 0) {
-       dropdownMenu.classList.add('show');
+   // Enter key in search input
+   searchInput.addEventListener('keydown', (e) => {
+     if (e.key === 'Enter') {
+       e.preventDefault();
+       performSearch();
      }
    });
 
-   searchInput.addEventListener('blur', () => {
-     setTimeout(() => dropdownMenu.classList.remove('show'), 150);
-   });
+   // Clear selection button
+   clearBtn.addEventListener('click', clearSelection);
 
-   // Not found checkbox
-   notFoundCheckbox.addEventListener('change', (e) => {
+   // Manual entry checkbox
+   manualCheckbox.addEventListener('change', (e) => {
      isManualEntry = e.target.checked;
      
      if (isManualEntry) {
        manualInput.classList.add('show');
        manualInput.focus();
-       selectedRecord = null;
+       clearSelection(); // Clear any selected record
        enableSection(reasonSection, true);
      } else {
        manualInput.classList.remove('show');
        manualInput.value = '';
-       enableSection(reasonSection, false);
-       selectedReason = null;
-       document.querySelectorAll('.reason-option').forEach(opt => opt.classList.remove('selected'));
+       if (!selectedRecord) {
+         enableSection(reasonSection, false);
+         selectedReason = null;
+         document.querySelectorAll('.reason-option').forEach(opt => opt.classList.remove('selected'));
+       }
      }
      
      updatePreview();
@@ -1212,6 +1399,16 @@
    // Manual input
    manualInput.addEventListener('input', () => {
      updatePreview();
+   });
+
+   // Popup close
+   popupClose.addEventListener('click', closeSearchPopup);
+   
+   // Click outside popup to close
+   searchPopup.addEventListener('click', (e) => {
+     if (e.target === searchPopup) {
+       closeSearchPopup();
+     }
    });
 
    // Reason selection
@@ -1239,7 +1436,7 @@
      }
 
      if (!selectedRecord && !isManualEntry) {
-       showToast('Vui lòng chọn người hoặc đánh dấu "Không có trong danh sách"', 'error');
+       showToast('Vui lòng chọn người hoặc đánh dấu "Tự nhập thông tin"', 'error');
        return;
      }
 
@@ -1251,9 +1448,8 @@
 
      isSubmitting = true;
      submitBtn.disabled = true;
-     submitText.textContent = 'Sending...';
+     submitText.textContent = 'Đang gửi...';
      submitIcon.textContent = '⏳';
-     showLoading(true);
 
      try {
        const checkinData = {
@@ -1291,7 +1487,6 @@
        submitBtn.disabled = false;
        submitText.textContent = 'SEND';
        submitIcon.textContent = '🚀';
-       showLoading(false);
      }
    });
 
@@ -1304,12 +1499,11 @@
      // Reset search
      searchInput.value = '';
      searchInput.disabled = true;
-     selectedRecord = null;
-     dropdownMenu.classList.remove('show');
+     clearSelection();
      
-     // Reset not found
-     notFoundSection.classList.remove('show');
-     notFoundCheckbox.checked = false;
+     // Reset manual entry
+     manualEntrySection.classList.remove('show');
+     manualCheckbox.checked = false;
      manualInput.classList.remove('show');
      manualInput.value = '';
      isManualEntry = false;
@@ -1327,9 +1521,8 @@
      previewSection.classList.remove('show');
      submitBtn.classList.remove('ready');
      
-     // Clear cache
-     searchCache.clear();
-     badge.textContent = '';
+     // Close popup
+     closeSearchPopup();
    };
 
    // 🔥 INITIALIZATION

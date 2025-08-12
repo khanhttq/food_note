@@ -774,7 +774,7 @@
 
  <script>
    // 🔥 CONFIGURATION
-   const API_BASE_URL = 'https://script.google.com/macros/s/AKfycbwIhA5NCMMWhBKTU69ZmwHkqeiRDOKOms4MzQ4R95B1IYn3HK56zva-mlmpaLuW6bxpJg/exec';
+   const API_BASE_URL = 'https://script.google.com/macros/s/AKfycbzYUn8dsVMCUpadHujS-8Brtt-s8l8xmyU2SPMR1qJXyHQ7LGjWp4qPY7k-KEjirAGvAg/exec';
    
    // Global state
    let selectedType = null;
@@ -960,7 +960,14 @@
    };
 
    const formatRecord = (record) => {
-     const parts = [record.name, record.email, record.card].filter(Boolean);
+     // Display more comprehensive info
+     const parts = [
+       record.name,
+       record.email, 
+       record.card,
+       record.staff_number,
+       record.card_number
+     ].filter(Boolean);
      return parts.join(' | ');
    };
 
@@ -989,7 +996,7 @@
        if (selectedRecord) {
          previewName.textContent = selectedRecord.name || '-';
          previewEmail.textContent = selectedRecord.email || '-';
-         previewCard.textContent = selectedRecord.card || '-';
+         previewCard.textContent = `${selectedRecord.card || '-'} ${selectedRecord.card_number ? '/ ' + selectedRecord.card_number : ''}`.trim();
        } else if (isManualEntry) {
          previewName.textContent = manualInput.value.trim() || '-';
          previewEmail.textContent = '-';
@@ -1078,9 +1085,17 @@
        const name = highlightText(record.name, query);
        const email = highlightText(record.email, query);
        const card = highlightText(record.card, query);
+       const staffNumber = highlightText(record.staff_number, query);
+       const cardNumber = highlightText(record.card_number, query);
        
-       const metaParts = [email, card].filter(p => p && p !== '(Không có tên)');
-       const meta = metaParts.length > 0 ? metaParts.join(' • ') : '';
+       // Build meta info từ các trường có dữ liệu
+       const metaParts = [];
+       if (email) metaParts.push(`📧 ${email}`);
+       if (card) metaParts.push(`💳 ${card}`);
+       if (staffNumber) metaParts.push(`👤 ${staffNumber}`);
+       if (cardNumber) metaParts.push(`🆔 ${cardNumber}`);
+       
+       const meta = metaParts.join(' • ');
        
        item.innerHTML = `
          <div class="menu-item-name">${name}</div>

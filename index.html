@@ -168,6 +168,7 @@
 
    .search-input-group {
      display: flex;
+     flex-direction: column;
      gap: var(--space-3);
      margin-bottom: var(--space-4);
    }
@@ -798,7 +799,7 @@
    <!-- 🔥 STEP 2: SEARCH WITH POPUP -->
    <div class="card">
      <div class="search-section" id="searchSection">
-       <div class="section-title">2. Tìm kiếm thông tin | Search </Search></div>
+       <div class="section-title">2. Tìm kiếm thông tin | Search</div>
        
        <!-- 🔥 SEARCH INPUT -->
        <div class="search-input-group">
@@ -932,6 +933,15 @@
        <button id="popupClose" class="popup-close">×</button>
      </div>
      <div class="popup-body">
+       <div class="checkbox-wrapper" style="margin-bottom: var(--space-4);">
+         <label class="checkbox">
+           <input type="checkbox" id="popupManualCheckbox">
+           <div class="checkmark"></div>
+         </label>
+         <label for="popupManualCheckbox" class="checkbox-label">
+           Không có trong danh sách - Tự nhập thông tin
+         </label>
+       </div>
        <div id="searchResults" class="search-results">
          <!-- Search results will be populated here -->
        </div>
@@ -977,6 +987,7 @@
    const searchPopup = document.getElementById('searchPopup');
    const popupClose = document.getElementById('popupClose');
    const searchResults = document.getElementById('searchResults');
+   const popupManualCheckbox = document.getElementById('popupManualCheckbox');
 
    // Preview elements
    const previewType = document.getElementById('previewType');
@@ -1211,12 +1222,13 @@
        // Show popup với results
        showSearchPopup(result.results || [], query);
        
-       // Show manual entry option if no results
+       // Show manual entry section if no results
        if (!result.results || result.results.length === 0) {
          manualEntrySection.classList.add('show');
        } else {
          manualEntrySection.classList.remove('show');
          manualCheckbox.checked = false;
+         popupManualCheckbox.checked = false;
          isManualEntry = false;
          manualInput.classList.remove('show');
        }
@@ -1309,6 +1321,7 @@
      // Hide manual entry
      manualEntrySection.classList.remove('show');
      manualCheckbox.checked = false;
+     popupManualCheckbox.checked = false;
      isManualEntry = false;
      manualInput.classList.remove('show');
      
@@ -1347,6 +1360,7 @@
        clearSelection();
        manualEntrySection.classList.remove('show');
        manualCheckbox.checked = false;
+       popupManualCheckbox.checked = false;
        isManualEntry = false;
        manualInput.classList.remove('show');
        
@@ -1374,9 +1388,10 @@
    // Clear selection button
    clearBtn.addEventListener('click', clearSelection);
 
-   // Manual entry checkbox
+   // Manual entry checkbox (main section)
    manualCheckbox.addEventListener('change', (e) => {
      isManualEntry = e.target.checked;
+     popupManualCheckbox.checked = isManualEntry;
      
      if (isManualEntry) {
        manualInput.classList.add('show');
@@ -1390,6 +1405,32 @@
          enableSection(reasonSection, false);
          selectedReason = null;
          document.querySelectorAll('.reason-option').forEach(opt => opt.classList.remove('selected'));
+       }
+     }
+     
+     updatePreview();
+   });
+
+   // Popup manual entry checkbox
+   popupManualCheckbox.addEventListener('change', (e) => {
+     isManualEntry = e.target.checked;
+     manualCheckbox.checked = isManualEntry;
+     
+     if (isManualEntry) {
+       manualEntrySection.classList.add('show');
+       manualInput.classList.add('show');
+       manualInput.focus();
+       clearSelection();
+       enableSection(reasonSection, true);
+       closeSearchPopup();
+     } else {
+       manualInput.classList.remove('show');
+       manualInput.value = '';
+       if (!selectedRecord) {
+         enableSection(reasonSection, false);
+         selectedReason = null;
+         document.querySelectorAll('.reason-option').forEach(opt => opt.classList.remove('selected'));
+         manualEntrySection.classList.remove('show');
        }
      }
      
@@ -1504,9 +1545,10 @@
      // Reset manual entry
      manualEntrySection.classList.remove('show');
      manualCheckbox.checked = false;
+     popupManualCheckbox.checked = false;
+     isManualEntry = false;
      manualInput.classList.remove('show');
      manualInput.value = '';
-     isManualEntry = false;
      
      // Reset reason
      document.querySelectorAll('.reason-option').forEach(opt => opt.classList.remove('selected'));

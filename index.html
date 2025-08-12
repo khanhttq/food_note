@@ -636,7 +636,7 @@
 
    <!-- 🔥 STEP 1: TYPE SELECTION -->
    <div class="card">
-     <div class="section-title">1. Chọn loại người dùng</div>
+     <div class="section-title">1. Chọn đối tượng | Select type</div>
      <div class="type-selector">
        <div class="type-option">
          <input type="radio" name="userType" value="staff" id="typeStaff" class="type-input">
@@ -665,7 +665,7 @@
    <!-- 🔥 STEP 2: SEARCH -->
    <div class="card">
      <div class="search-section" id="searchSection">
-       <div class="section-title">2. Tìm kiếm thông tin</div>
+       <div class="section-title">2. Tìm kiếm thông tin | Search</div>
        <div class="input-group">
          <div class="dropdown">
            <div class="input-wrapper">
@@ -713,19 +713,19 @@
    <!-- 🔥 STEP 3: REASON SELECTION -->
    <div class="card">
      <div class="reason-section" id="reasonSection">
-       <div class="section-title">3. Chọn lý do</div>
+       <div class="section-title">3. Chọn lý do | Select reason</div>
        <div class="reason-options">
          <div class="reason-option" data-reason="forgot_card">
            <div class="reason-icon">🤦‍♂️</div>
-           <div class="reason-text">Quên mang thẻ</div>
+           <div class="reason-text">Quên mang thẻ | Forgot card</div>
          </div>
          <div class="reason-option" data-reason="broken_card">
            <div class="reason-icon">💳</div>
-           <div class="reason-text">Thẻ lỗi</div>
+           <div class="reason-text">Thẻ lỗi | Broken card</div>
          </div>
          <div class="reason-option" data-reason="no_card">
            <div class="reason-icon">❓</div>
-           <div class="reason-text">Chưa có thẻ</div>
+           <div class="reason-text">Chưa có thẻ | No card</div>
          </div>
        </div>
      </div>
@@ -734,16 +734,16 @@
    <!-- 🔥 PREVIEW -->
    <div class="preview-section" id="previewSection">
      <div class="preview-header">
-       <span class="preview-label">Thông tin sẽ gửi</span>
-       <span class="preview-status">✅ Sẵn sàng</span>
+       <span class="preview-label">Thông tin của bạn | Your information</span>
+       <span class="preview-status">✅</span>
      </div>
      <div class="preview-content">
        <div class="preview-item">
-         <div class="preview-field-label">👤 Loại:</div>
+         <div class="preview-field-label">👤 Loại | Type:</div>
          <div id="previewType" class="preview-field-value">-</div>
        </div>
        <div class="preview-item">
-         <div class="preview-field-label">📝 Tên:</div>
+         <div class="preview-field-label">📝 Tên | Name:</div>
          <div id="previewName" class="preview-field-value">-</div>
        </div>
        <div class="preview-item">
@@ -751,11 +751,11 @@
          <div id="previewEmail" class="preview-field-value">-</div>
        </div>
        <div class="preview-item">
-         <div class="preview-field-label">💳 Thẻ:</div>
+         <div class="preview-field-label">💳 Thẻ | Card:</div>
          <div id="previewCard" class="preview-field-value">-</div>
        </div>
        <div class="preview-item">
-         <div class="preview-field-label">❓ Lý do:</div>
+         <div class="preview-field-label">❓ Lý do | Reason:</div>
          <div id="previewReason" class="preview-field-value">-</div>
        </div>
      </div>
@@ -764,7 +764,7 @@
    <!-- 🔥 SUBMIT -->
    <div class="submit-section" id="submitSection">
      <button id="submitBtn" class="btn">
-       <span id="submitText">Check-in</span>
+       <span id="submitText">SEND</span>
        <span id="submitIcon">🚀</span>
      </button>
    </div>
@@ -1289,7 +1289,7 @@
      } finally {
        isSubmitting = false;
        submitBtn.disabled = false;
-       submitText.textContent = 'Check-in';
+       submitText.textContent = 'SEND';
        submitIcon.textContent = '🚀';
        showLoading(false);
      }

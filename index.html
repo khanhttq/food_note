@@ -6,7 +6,7 @@
  <meta name="apple-mobile-web-app-capable" content="yes" />
  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
  <meta name="theme-color" content="#111827" />
- <title>Search App</title>
+ <title>Check-in App</title>
  <style>
    :root {
      --primary: #111827;
@@ -96,11 +96,79 @@
      padding: var(--card-padding);
      box-shadow: var(--shadow);
      border: 1px solid var(--border);
+     margin-bottom: var(--space-4);
+   }
+
+   .section-title {
+     font-size: var(--text-lg);
+     font-weight: 600;
+     margin-bottom: var(--space-4);
+     color: var(--text);
+   }
+
+   /* 🔥 TYPE SELECTOR */
+   .type-selector {
+     display: grid;
+     grid-template-columns: repeat(3, 1fr);
+     gap: var(--space-3);
+     margin-bottom: var(--space-6);
+   }
+
+   .type-option {
+     position: relative;
+     cursor: pointer;
+   }
+
+   .type-input {
+     position: absolute;
+     opacity: 0;
+     pointer-events: none;
+   }
+
+   .type-label {
+     display: flex;
+     flex-direction: column;
+     align-items: center;
+     padding: var(--space-4);
+     border: 2px solid var(--border);
+     border-radius: var(--radius);
+     background: var(--bg);
+     transition: all 0.2s ease;
+     min-height: 80px;
+     justify-content: center;
+   }
+
+   .type-input:checked + .type-label {
+     border-color: var(--accent);
+     background: #f0f9ff;
+     color: var(--accent);
+   }
+
+   .type-emoji {
+     font-size: 24px;
+     margin-bottom: var(--space-1);
+   }
+
+   .type-text {
+     font-size: var(--text-sm);
+     font-weight: 600;
+   }
+
+   /* 🔥 SEARCH SECTION */
+   .search-section {
+     opacity: 0.5;
+     pointer-events: none;
+     transition: all 0.3s ease;
+   }
+
+   .search-section.enabled {
+     opacity: 1;
+     pointer-events: auto;
    }
 
    .input-group {
      position: relative;
-     margin-bottom: var(--space-6);
+     margin-bottom: var(--space-4);
    }
 
    .input-wrapper {
@@ -165,6 +233,7 @@
      to { transform: rotate(360deg); }
    }
 
+   /* 🔥 DROPDOWN */
    .dropdown {
      position: relative;
    }
@@ -178,13 +247,12 @@
      border: 1px solid var(--border);
      border-radius: var(--radius);
      box-shadow: var(--shadow-lg);
-     max-height: 60vh;
+     max-height: 40vh;
      overflow-y: auto;
      z-index: 50;
      margin-top: var(--space-2);
      display: none;
      -webkit-overflow-scrolling: touch;
-     overscroll-behavior: contain;
    }
 
    .dropdown-menu.show {
@@ -200,9 +268,6 @@
      display: flex;
      flex-direction: column;
      justify-content: center;
-     -webkit-touch-callout: none;
-     -webkit-user-select: none;
-     user-select: none;
    }
 
    .menu-item:last-child {
@@ -224,7 +289,6 @@
    .menu-item-meta {
      font-size: var(--text-sm);
      color: var(--text-soft);
-     line-height: 1.4;
    }
 
    .highlight {
@@ -234,6 +298,145 @@
      border-radius: 2px;
    }
 
+   /* 🔥 NOT FOUND OPTION */
+   .not-found-section {
+     border: 1px solid var(--border);
+     border-radius: var(--radius);
+     padding: var(--space-4);
+     margin-bottom: var(--space-4);
+     background: #fefce8;
+     display: none;
+   }
+
+   .not-found-section.show {
+     display: block;
+     animation: fadeIn 0.3s ease;
+   }
+
+   @keyframes fadeIn {
+     from { opacity: 0; transform: translateY(-10px); }
+     to { opacity: 1; transform: translateY(0); }
+   }
+
+   .checkbox-wrapper {
+     display: flex;
+     align-items: center;
+     gap: var(--space-3);
+     margin-bottom: var(--space-4);
+   }
+
+   .checkbox {
+     width: 20px;
+     height: 20px;
+     border: 2px solid var(--border);
+     border-radius: 4px;
+     cursor: pointer;
+     position: relative;
+     transition: all 0.2s ease;
+   }
+
+   .checkbox input {
+     opacity: 0;
+     position: absolute;
+     pointer-events: none;
+   }
+
+   .checkbox input:checked + .checkmark {
+     background: var(--accent);
+     border-color: var(--accent);
+   }
+
+   .checkmark {
+     width: 100%;
+     height: 100%;
+     border-radius: 4px;
+     display: flex;
+     align-items: center;
+     justify-content: center;
+     color: white;
+     font-size: 12px;
+   }
+
+   .checkbox input:checked + .checkmark::after {
+     content: '✓';
+   }
+
+   .checkbox-label {
+     font-weight: 600;
+     color: #92400e;
+     cursor: pointer;
+   }
+
+   .manual-input {
+     width: 100%;
+     padding: var(--space-3);
+     border: 2px solid var(--border);
+     border-radius: var(--radius);
+     font-size: var(--text-base);
+     transition: border-color 0.2s ease;
+     display: none;
+   }
+
+   .manual-input.show {
+     display: block;
+   }
+
+   .manual-input:focus {
+     outline: none;
+     border-color: var(--accent);
+   }
+
+   /* 🔥 REASON SELECTOR */
+   .reason-section {
+     opacity: 0.5;
+     pointer-events: none;
+     transition: all 0.3s ease;
+   }
+
+   .reason-section.enabled {
+     opacity: 1;
+     pointer-events: auto;
+   }
+
+   .reason-options {
+     display: flex;
+     flex-direction: column;
+     gap: var(--space-3);
+     margin-bottom: var(--space-6);
+   }
+
+   .reason-option {
+     display: flex;
+     align-items: center;
+     gap: var(--space-3);
+     padding: var(--space-3);
+     border: 2px solid var(--border);
+     border-radius: var(--radius);
+     cursor: pointer;
+     transition: all 0.2s ease;
+   }
+
+   .reason-option:hover {
+     border-color: var(--accent);
+   }
+
+   .reason-option.selected {
+     border-color: var(--accent);
+     background: #f0f9ff;
+   }
+
+   .reason-icon {
+     font-size: 20px;
+     width: 24px;
+     text-align: center;
+   }
+
+   .reason-text {
+     font-weight: 500;
+     flex: 1;
+   }
+
+   /* 🔥 PREVIEW SECTION */
    .preview-section {
      background: var(--bg-soft);
      border: 1px solid var(--border);
@@ -249,14 +452,8 @@
    }
 
    @keyframes slideIn {
-     from {
-       opacity: 0;
-       transform: translateY(-10px);
-     }
-     to {
-       opacity: 1;
-       transform: translateY(0);
-     }
+     from { opacity: 0; transform: translateY(-10px); }
+     to { opacity: 1; transform: translateY(0); }
    }
 
    .preview-header {
@@ -274,21 +471,13 @@
      color: var(--text);
    }
 
-   .preview-type {
+   .preview-status {
      font-size: var(--text-xs);
      padding: var(--space-1) var(--space-2);
      border-radius: var(--radius-sm);
      font-weight: 500;
-   }
-
-   .preview-type.selected {
      background: #dcfce7;
      color: #166534;
-   }
-
-   .preview-type.typed {
-     background: #fef3c7;
-     color: #92400e;
    }
 
    .preview-content {
@@ -326,14 +515,16 @@
      font-style: italic;
    }
 
-   .preview-divider {
-     height: 1px;
-     background: var(--border);
-     margin: var(--space-2) 0;
+   /* 🔥 SUBMIT BUTTON */
+   .submit-section {
+     opacity: 0.5;
+     pointer-events: none;
+     transition: all 0.3s ease;
    }
 
-   .preview-selected {
-     padding-top: var(--space-2);
+   .submit-section.enabled {
+     opacity: 1;
+     pointer-events: auto;
    }
 
    .btn {
@@ -374,6 +565,7 @@
      background: #059669;
    }
 
+   /* 🔥 TOAST */
    .toast {
      position: fixed;
      bottom: var(--space-6);
@@ -409,6 +601,7 @@
      background: var(--warning);
    }
 
+   /* Mobile optimizations */
    input, select, textarea {
      font-size: 16px !important;
    }
@@ -419,11 +612,11 @@
      appearance: none;
    }
 
-   button, .menu-item, .btn {
+   button, .menu-item, .btn, .type-label, .reason-option {
      min-height: 48px;
    }
 
-   .btn, .menu-item, .preview-section {
+   .btn, .menu-item, .preview-section, .type-label, .reason-option {
      -webkit-touch-callout: none;
      -webkit-user-select: none;
      user-select: none;
@@ -438,63 +631,141 @@
 <body>
  <div class="container">
    <div class="header">
-     <h1>🔍 Tìm kiếm thông tin</h1>
+     <h1>🏫 Check-in System</h1>
    </div>
 
+   <!-- 🔥 STEP 1: TYPE SELECTION -->
    <div class="card">
-     <div class="input-group">
-       <div class="dropdown">
-         <div class="input-wrapper">
-           <input 
-             id="searchInput"
-             class="input" 
-             type="text" 
-             placeholder="Nhập tên, email hoặc mã thẻ..."
-             autocomplete="off"
-             autocapitalize="off"
-             autocorrect="off"
-             spellcheck="false"
-           />
-           <div class="search-status">
-             <div id="loading" class="loading"></div>
-             <span id="badge" class="badge"></span>
-           </div>
-         </div>
-         <div id="dropdownMenu" class="dropdown-menu"></div>
+     <div class="section-title">1. Chọn loại người dùng</div>
+     <div class="type-selector">
+       <div class="type-option">
+         <input type="radio" name="userType" value="staff" id="typeStaff" class="type-input">
+         <label for="typeStaff" class="type-label">
+           <div class="type-emoji">👨‍💼</div>
+           <div class="type-text">Staff</div>
+         </label>
+       </div>
+       <div class="type-option">
+         <input type="radio" name="userType" value="student" id="typeStudent" class="type-input">
+         <label for="typeStudent" class="type-label">
+           <div class="type-emoji">🎓</div>
+           <div class="type-text">Student</div>
+         </label>
+       </div>
+       <div class="type-option">
+         <input type="radio" name="userType" value="teacher" id="typeTeacher" class="type-input">
+         <label for="typeTeacher" class="type-label">
+           <div class="type-emoji">👨‍🏫</div>
+           <div class="type-text">Teacher</div>
+         </label>
        </div>
      </div>
+   </div>
 
-     <div id="previewSection" class="preview-section">
-       <div class="preview-header">
-         <span class="preview-label">Thông tin sẽ gửi</span>
-         <span id="previewType" class="preview-type"></span>
-       </div>
-       <div id="previewContent" class="preview-content">
-         <div class="preview-item">
-           <div class="preview-field-label">Nội dung nhập:</div>
-           <div id="previewInput" class="preview-field-value">-</div>
+   <!-- 🔥 STEP 2: SEARCH -->
+   <div class="card">
+     <div class="search-section" id="searchSection">
+       <div class="section-title">2. Tìm kiếm thông tin</div>
+       <div class="input-group">
+         <div class="dropdown">
+           <div class="input-wrapper">
+             <input 
+               id="searchInput"
+               class="input" 
+               type="text" 
+               placeholder="Nhập tên, email hoặc mã thẻ..."
+               autocomplete="off"
+               autocapitalize="off"
+               autocorrect="off"
+               spellcheck="false"
+               disabled
+             />
+             <div class="search-status">
+               <div id="loading" class="loading"></div>
+               <span id="badge" class="badge"></span>
+             </div>
+           </div>
+           <div id="dropdownMenu" class="dropdown-menu"></div>
          </div>
-         <div id="previewSelected" class="preview-selected" style="display: none;">
-           <div class="preview-divider"></div>
-           <div class="preview-item">
-             <div class="preview-field-label">👤 Tên:</div>
-             <div id="previewName" class="preview-field-value">-</div>
-           </div>
-           <div class="preview-item">
-             <div class="preview-field-label">📧 Email:</div>
-             <div id="previewEmail" class="preview-field-value">-</div>
-           </div>
-           <div class="preview-item">
-             <div class="preview-field-label">💳 Thẻ:</div>
-             <div id="previewCard" class="preview-field-value">-</div>
-           </div>
+       </div>
+
+       <!-- 🔥 NOT FOUND OPTION -->
+       <div class="not-found-section" id="notFoundSection">
+         <div class="checkbox-wrapper">
+           <label class="checkbox">
+             <input type="checkbox" id="notFoundCheckbox">
+             <div class="checkmark"></div>
+           </label>
+           <label for="notFoundCheckbox" class="checkbox-label">
+             ❌ Không có trong danh sách
+           </label>
+         </div>
+         <input 
+           type="text" 
+           id="manualInput" 
+           class="manual-input" 
+           placeholder="Nhập tên đầy đủ..."
+         />
+       </div>
+     </div>
+   </div>
+
+   <!-- 🔥 STEP 3: REASON SELECTION -->
+   <div class="card">
+     <div class="reason-section" id="reasonSection">
+       <div class="section-title">3. Chọn lý do</div>
+       <div class="reason-options">
+         <div class="reason-option" data-reason="forgot_card">
+           <div class="reason-icon">🤦‍♂️</div>
+           <div class="reason-text">Quên mang thẻ</div>
+         </div>
+         <div class="reason-option" data-reason="broken_card">
+           <div class="reason-icon">💳</div>
+           <div class="reason-text">Thẻ lỗi</div>
+         </div>
+         <div class="reason-option" data-reason="no_card">
+           <div class="reason-icon">❓</div>
+           <div class="reason-text">Chưa có thẻ</div>
          </div>
        </div>
      </div>
+   </div>
 
+   <!-- 🔥 PREVIEW -->
+   <div class="preview-section" id="previewSection">
+     <div class="preview-header">
+       <span class="preview-label">Thông tin sẽ gửi</span>
+       <span class="preview-status">✅ Sẵn sàng</span>
+     </div>
+     <div class="preview-content">
+       <div class="preview-item">
+         <div class="preview-field-label">👤 Loại:</div>
+         <div id="previewType" class="preview-field-value">-</div>
+       </div>
+       <div class="preview-item">
+         <div class="preview-field-label">📝 Tên:</div>
+         <div id="previewName" class="preview-field-value">-</div>
+       </div>
+       <div class="preview-item">
+         <div class="preview-field-label">📧 Email:</div>
+         <div id="previewEmail" class="preview-field-value">-</div>
+       </div>
+       <div class="preview-item">
+         <div class="preview-field-label">💳 Thẻ:</div>
+         <div id="previewCard" class="preview-field-value">-</div>
+       </div>
+       <div class="preview-item">
+         <div class="preview-field-label">❓ Lý do:</div>
+         <div id="previewReason" class="preview-field-value">-</div>
+       </div>
+     </div>
+   </div>
+
+   <!-- 🔥 SUBMIT -->
+   <div class="submit-section" id="submitSection">
      <button id="submitBtn" class="btn">
-       <span id="submitText">Gửi thông tin</span>
-       <span id="submitIcon">📤</span>
+       <span id="submitText">Check-in</span>
+       <span id="submitIcon">🚀</span>
      </button>
    </div>
  </div>
@@ -502,50 +773,60 @@
  <div id="toast" class="toast"></div>
 
  <script>
-   // 🔥 CONFIGURATION - UPDATE WITH YOUR ACTUAL URL
-   const API_BASE_URL = 'https://script.google.com/macros/s/AKfycby5lURMPxwKDOTvyQC8VlIgIo0NIzczgyTs1RH8wXjwmjHXsSvBFZ7QcJ9ysPu8v3o7rQ/exec';
+   // 🔥 CONFIGURATION
+   const API_BASE_URL = 'https://script.google.com/macros/s/AKfycbwIhA5NCMMWhBKTU69ZmwHkqeiRDOKOms4MzQ4R95B1IYn3HK56zva-mlmpaLuW6bxpJg/exec';
    
-   // Global variables
-   let dataset = [];
-   let filteredResults = [];
+   // Global state
+   let selectedType = null;
    let selectedRecord = null;
-   let activeIndex = -1;
+   let isManualEntry = false;
+   let selectedReason = null;
    let isSubmitting = false;
    let searchCache = new Map();
 
    // DOM elements
+   const searchSection = document.getElementById('searchSection');
    const searchInput = document.getElementById('searchInput');
    const dropdownMenu = document.getElementById('dropdownMenu');
+   const notFoundSection = document.getElementById('notFoundSection');
+   const notFoundCheckbox = document.getElementById('notFoundCheckbox');
+   const manualInput = document.getElementById('manualInput');
+   const reasonSection = document.getElementById('reasonSection');
    const previewSection = document.getElementById('previewSection');
-   const previewType = document.getElementById('previewType');
-   const previewInput = document.getElementById('previewInput');
-   const previewSelected = document.getElementById('previewSelected');
-   const previewName = document.getElementById('previewName');
-   const previewEmail = document.getElementById('previewEmail');
-   const previewCard = document.getElementById('previewCard');
+   const submitSection = document.getElementById('submitSection');
    const submitBtn = document.getElementById('submitBtn');
    const submitText = document.getElementById('submitText');
    const submitIcon = document.getElementById('submitIcon');
-   const toast = document.getElementById('toast');
    const loading = document.getElementById('loading');
    const badge = document.getElementById('badge');
+   const toast = document.getElementById('toast');
 
-   // 🔥 PURE FORM API - 100% NO CORS ISSUES
+   // Preview elements
+   const previewType = document.getElementById('previewType');
+   const previewName = document.getElementById('previewName');
+   const previewEmail = document.getElementById('previewEmail');
+   const previewCard = document.getElementById('previewCard');
+   const previewReason = document.getElementById('previewReason');
+
+   // 🔥 API CLASS
    class SheetsAPI {
-     // GET với JSONP (không CORS)
-     static async getData() {
+     static async searchByType(userType, query, limit = 20) {
        try {
+         if (!query || query.length < 2) {
+           return { results: [], count: 0 };
+         }
+         
          return new Promise((resolve, reject) => {
-           const callbackName = 'jsonp_callback_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+           const callbackName = 'search_callback_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
            
-           console.log('🔥 JSONP request với callback:', callbackName);
+           console.log(`🔍 Searching ${userType}:`, query);
            
            const script = document.createElement('script');
-           script.src = `${API_BASE_URL}?action=getData&callback=${callbackName}&t=${Date.now()}`;
+           script.src = `${API_BASE_URL}?action=searchByType&type=${userType}&query=${encodeURIComponent(query)}&limit=${limit}&callback=${callbackName}&t=${Date.now()}`;
            script.id = callbackName;
            
            window[callbackName] = function(data) {
-             console.log('✅ JSONP callback received:', data);
+             console.log('✅ Search results:', data);
              
              delete window[callbackName];
              const scriptEl = document.getElementById(callbackName);
@@ -554,16 +835,15 @@
              if (data && data.error) {
                reject(new Error(data.error));
              } else {
-               resolve(data || []);
+               resolve(data);
              }
            };
            
            script.onerror = function() {
-             console.error('❌ JSONP script failed');
              delete window[callbackName];
              const scriptEl = document.getElementById(callbackName);
              if (scriptEl) document.head.removeChild(scriptEl);
-             reject(new Error('Failed to load data from server'));
+             reject(new Error('Search failed'));
            };
            
            document.head.appendChild(script);
@@ -573,149 +853,81 @@
                delete window[callbackName];
                const scriptEl = document.getElementById(callbackName);
                if (scriptEl) document.head.removeChild(scriptEl);
-               reject(new Error('Request timeout after 30 seconds'));
+               reject(new Error('Search timeout'));
              }
-           }, 30000);
+           }, 10000);
          });
        } catch (error) {
-         console.error('API getData Error:', error);
+         console.error('Search error:', error);
          throw error;
        }
      }
      
-     // 🔥 POST với Pure Form - KHÔNG BAO GIỜ BỊ CORS
-     static async saveResponse(inputText, selectedRecord) {
+     static async submitCheckin(data) {
        return new Promise((resolve, reject) => {
-         console.log('🔥 Pure Form Submission - Zero CORS risk!');
-         console.log('📝 Data:', { inputText, selectedRecord });
+         console.log('🔥 Submitting checkin:', data);
          
-         // Tạo unique IDs
          const timestamp = Date.now();
-         const formId = 'form_' + timestamp;
-         const iframeId = 'iframe_' + timestamp;
+         const formId = 'checkin_form_' + timestamp;
+         const iframeId = 'checkin_iframe_' + timestamp;
          
-         // Tạo hidden form
          const form = document.createElement('form');
          form.id = formId;
          form.method = 'POST';
          form.action = API_BASE_URL;
          form.target = iframeId;
          form.style.display = 'none';
-         form.enctype = 'application/x-www-form-urlencoded';
          
-         // Tạo hidden iframe
          const iframe = document.createElement('iframe');
          iframe.id = iframeId;
          iframe.name = iframeId;
          iframe.style.display = 'none';
-         iframe.style.width = '0';
-         iframe.style.height = '0';
-         iframe.style.border = 'none';
          
-         // Tạo input với JSON data
          const dataInput = document.createElement('input');
          dataInput.type = 'hidden';
          dataInput.name = 'data';
          dataInput.value = JSON.stringify({
-           action: 'saveResponse',
-           inputText: inputText,
-           selectedRecord: selectedRecord,
-           timestamp: new Date().toISOString(),
-           userAgent: navigator.userAgent,
-           formId: formId
+           action: 'checkin',
+           ...data,
+           timestamp: new Date().toISOString()
          });
-         
-         console.log('📤 Form payload:', dataInput.value);
          
          form.appendChild(dataInput);
          document.body.appendChild(form);
          document.body.appendChild(iframe);
          
          let isCompleted = false;
-         let timeoutId;
          
-         // Success handler
-         const handleSuccess = () => {
-           if (isCompleted) return;
-           isCompleted = true;
-           
-           console.log('✅ Form submission completed successfully');
-           
-           clearTimeout(timeoutId);
-           
-           // Cleanup
-           setTimeout(() => {
-             try {
-               const formEl = document.getElementById(formId);
-               const iframeEl = document.getElementById(iframeId);
-               if (formEl && formEl.parentNode) document.body.removeChild(formEl);
-               if (iframeEl && iframeEl.parentNode) document.body.removeChild(iframeEl);
-             } catch (cleanupError) {
-               console.warn('⚠️ Cleanup warning:', cleanupError);
-             }
-           }, 1000);
-           
-           resolve({
-             success: true,
-             message: 'Đã lưu thành công!',
-             method: 'pure_form',
-             timestamp: new Date().toISOString()
-           });
-         };
-         
-         // Error handler
-         const handleError = (errorMsg = 'Form submission failed') => {
-           if (isCompleted) return;
-           isCompleted = true;
-           
-           console.error('❌ Form submission error:', errorMsg);
-           
-           clearTimeout(timeoutId);
-           
-           setTimeout(() => {
-             try {
-               const formEl = document.getElementById(formId);
-               const iframeEl = document.getElementById(iframeId);
-               if (formEl && formEl.parentNode) document.body.removeChild(formEl);
-               if (iframeEl && iframeEl.parentNode) document.body.removeChild(iframeEl);
-             } catch (e) {}
-           }, 1000);
-           
-           reject(new Error(errorMsg));
-         };
-         
-         // Iframe load event
          iframe.addEventListener('load', function() {
-           console.log('📨 Iframe loaded - form submitted');
-           handleSuccess();
+           if (!isCompleted) {
+             isCompleted = true;
+             setTimeout(() => {
+               try {
+                 if (form.parentNode) document.body.removeChild(form);
+                 if (iframe.parentNode) document.body.removeChild(iframe);
+               } catch (e) {}
+             }, 1000);
+             resolve({ success: true, message: 'Check-in thành công!' });
+           }
          });
          
-         // Iframe error event
-         iframe.addEventListener('error', function() {
-           console.error('📨 Iframe error event');
-           handleError('Iframe error during submission');
-         });
+         setTimeout(() => {
+           if (!isCompleted) {
+             isCompleted = true;
+             try {
+               if (form.parentNode) document.body.removeChild(form);
+               if (iframe.parentNode) document.body.removeChild(iframe);
+             } catch (e) {}
+             resolve({ success: true, message: 'Check-in đã gửi' });
+           }
+         }, 10000);
          
-         // Timeout fallback (12 giây)
-         timeoutId = setTimeout(() => {
-           console.log('⏰ Form submission timeout - assuming success');
-           handleSuccess(); // Assume success on timeout
-         }, 12000);
-         
-         // Submit form
-         console.log('📤 Submitting form to:', API_BASE_URL);
-         try {
-           form.submit();
-           console.log('📤 Form.submit() called successfully');
-         } catch (submitError) {
-           console.error('📤 Form submit error:', submitError);
-           handleError('Form submit failed: ' + submitError.message);
-         }
+         form.submit();
        });
      }
    }
 
-   // Utility functions
+   // 🔥 UTILITY FUNCTIONS
    const showLoading = (show = true) => {
      loading.classList.toggle('show', show);
    };
@@ -728,11 +940,6 @@
      setTimeout(() => {
        toast.classList.remove('show');
      }, 3000);
-   };
-
-   const formatRecord = (record) => {
-     const parts = [record.name, record.email, record.card].filter(Boolean);
-     return parts.join(' | ');
    };
 
    const normalize = (str) => {
@@ -752,76 +959,118 @@
      return text.replace(regex, '<span class="highlight">$1</span>');
    };
 
-   // Dropdown controls
-   const openDropdown = () => {
-     if (filteredResults.length > 0) {
-       dropdownMenu.classList.add('show');
-       searchInput.setAttribute('aria-expanded', 'true');
+   const formatRecord = (record) => {
+     const parts = [record.name, record.email, record.card].filter(Boolean);
+     return parts.join(' | ');
+   };
+
+   // 🔥 UI STATE MANAGEMENT
+   const enableSection = (section, enabled = true) => {
+     if (enabled) {
+       section.classList.add('enabled');
+       const inputs = section.querySelectorAll('input, button');
+       inputs.forEach(input => input.disabled = false);
+     } else {
+       section.classList.remove('enabled');
+       const inputs = section.querySelectorAll('input, button');
+       inputs.forEach(input => input.disabled = true);
      }
-   };
-
-   const closeDropdown = () => {
-     dropdownMenu.classList.remove('show');
-     searchInput.setAttribute('aria-expanded', 'false');
-     activeIndex = -1;
-   };
-
-   // Selection and preview
-   const setSelected = (record) => {
-     selectedRecord = record;
-     updatePreview();
    };
 
    const updatePreview = () => {
-     const inputValue = searchInput.value.trim();
+     const hasData = selectedType && (selectedRecord || (isManualEntry && manualInput.value.trim())) && selectedReason;
      
-     if (inputValue || selectedRecord) {
+     if (hasData) {
        previewSection.classList.add('show');
        
-       previewInput.textContent = inputValue || '-';
-       previewInput.className = inputValue ? 'preview-field-value' : 'preview-field-value empty';
+       // Update preview content
+       previewType.textContent = getTypeLabel(selectedType);
        
        if (selectedRecord) {
-         previewType.textContent = '✅ Đã chọn từ danh sách';
-         previewType.className = 'preview-type selected';
-         
-         previewSelected.style.display = 'block';
          previewName.textContent = selectedRecord.name || '-';
-         previewName.className = selectedRecord.name ? 'preview-field-value' : 'preview-field-value empty';
-         
          previewEmail.textContent = selectedRecord.email || '-';
-         previewEmail.className = selectedRecord.email ? 'preview-field-value' : 'preview-field-value empty';
-         
          previewCard.textContent = selectedRecord.card || '-';
-         previewCard.className = selectedRecord.card ? 'preview-field-value' : 'preview-field-value empty';
-         
-         submitBtn.className = 'btn ready';
-         submitText.textContent = 'Xác nhận gửi';
-         submitIcon.textContent = '✅';
-         
-       } else {
-         previewType.textContent = '✏️ Nhập tự do';
-         previewType.className = 'preview-type typed';
-         previewSelected.style.display = 'none';
-         
-         submitBtn.className = 'btn';
-         submitText.textContent = 'Gửi thông tin';
-         submitIcon.textContent = '📤';
+       } else if (isManualEntry) {
+         previewName.textContent = manualInput.value.trim() || '-';
+         previewEmail.textContent = '-';
+         previewCard.textContent = '-';
        }
+       
+       previewReason.textContent = getReasonLabel(selectedReason);
+       
+       // Enable submit
+       enableSection(submitSection, true);
+       submitBtn.classList.add('ready');
      } else {
        previewSection.classList.remove('show');
-       submitBtn.className = 'btn';
-       submitText.textContent = 'Gửi thông tin';
-       submitIcon.textContent = '📤';
+       enableSection(submitSection, false);
+       submitBtn.classList.remove('ready');
      }
    };
 
-   // Rendering
-   const renderResults = (results, query = '') => {
+   const getTypeLabel = (type) => {
+     const labels = {
+       staff: '👨‍💼 Staff',
+       student: '🎓 Student', 
+       teacher: '👨‍🏫 Teacher'
+     };
+     return labels[type] || type;
+   };
+
+   const getReasonLabel = (reason) => {
+     const labels = {
+       forgot_card: '🤦‍♂️ Quên mang thẻ',
+       broken_card: '💳 Thẻ lỗi',
+       no_card: '❓ Chưa có thẻ'
+     };
+     return labels[reason] || reason;
+   };
+
+   // 🔥 SEARCH FUNCTIONALITY
+   const performSearch = async (query) => {
+     if (!selectedType || !query || query.length < 2) {
+       dropdownMenu.classList.remove('show');
+       badge.textContent = '';
+       return;
+     }
+
+     const cacheKey = `${selectedType}:${query}`;
+     if (searchCache.has(cacheKey)) {
+       renderResults(searchCache.get(cacheKey), query);
+       return;
+     }
+
+     try {
+       showLoading(true);
+       const result = await SheetsAPI.searchByType(selectedType, query);
+       
+       searchCache.set(cacheKey, result.results || []);
+       renderResults(result.results || [], query);
+       badge.textContent = result.count ? `${result.count} kết quả` : 'Không tìm thấy';
+       
+       // Show not found option if no results
+       if (!result.results || result.results.length === 0) {
+         notFoundSection.classList.add('show');
+       } else {
+         notFoundSection.classList.remove('show');
+         notFoundCheckbox.checked = false;
+         isManualEntry = false;
+         manualInput.classList.remove('show');
+       }
+       
+     } catch (error) {
+       console.error('Search error:', error);
+       showToast('Lỗi tìm kiếm: ' + error.message, 'error');
+       badge.textContent = 'Lỗi tìm kiếm';
+     } finally {
+       showLoading(false);
+     }
+   };
+
+   const renderResults = (results, query) => {
      const fragment = document.createDocumentFragment();
-     const maxResults = 50;
      
-     results.slice(0, maxResults).forEach((record, index) => {
+     results.forEach((record, index) => {
        const item = document.createElement('div');
        item.className = 'menu-item';
        item.setAttribute('data-index', index);
@@ -838,17 +1087,6 @@
          ${meta ? `<div class="menu-item-meta">${meta}</div>` : ''}
        `;
        
-       item.addEventListener('touchstart', (e) => {
-         e.preventDefault();
-         item.classList.add('active');
-       });
-       
-       item.addEventListener('touchend', (e) => {
-         e.preventDefault();
-         item.classList.remove('active');
-         selectRecord(record);
-       });
-       
        item.addEventListener('click', (e) => {
          e.preventDefault();
          selectRecord(record);
@@ -857,87 +1095,30 @@
        fragment.appendChild(item);
      });
 
-     if (results.length > maxResults) {
-       const moreItem = document.createElement('div');
-       moreItem.className = 'menu-item';
-       moreItem.style.fontStyle = 'italic';
-       moreItem.style.textAlign = 'center';
-       moreItem.innerHTML = `
-         <div class="menu-item-name">... và ${results.length - maxResults} kết quả khác</div>
-       `;
-       fragment.appendChild(moreItem);
-     }
-
      dropdownMenu.innerHTML = '';
      dropdownMenu.appendChild(fragment);
      
-     badge.textContent = dataset.length ? `${results.length}/${dataset.length}` : '';
-     
      if (results.length > 0) {
-       openDropdown();
+       dropdownMenu.classList.add('show');
      } else {
-       closeDropdown();
+       dropdownMenu.classList.remove('show');
      }
    };
 
    const selectRecord = (record) => {
-     setSelected(record);
+     selectedRecord = record;
      searchInput.value = formatRecord(record);
-     closeDropdown();
+     dropdownMenu.classList.remove('show');
+     notFoundSection.classList.remove('show');
+     notFoundCheckbox.checked = false;
+     isManualEntry = false;
+     manualInput.classList.remove('show');
+     
+     enableSection(reasonSection, true);
      updatePreview();
-     searchInput.focus();
    };
 
-   // Search functionality
-   const performSearch = (query) => {
-     const normalizedQuery = normalize(query);
-     
-     if (searchCache.has(normalizedQuery)) {
-       filteredResults = searchCache.get(normalizedQuery);
-       renderResults(filteredResults, normalizedQuery);
-       return;
-     }
-
-     if (!normalizedQuery) {
-       filteredResults = dataset.slice(0, 20);
-       searchCache.set(normalizedQuery, filteredResults);
-       renderResults(filteredResults, normalizedQuery);
-       return;
-     }
-
-     const scored = dataset.map(record => {
-       let score = 0;
-       const recordNorm = record.keyNorm;
-       
-       if (recordNorm === normalizedQuery) score += 1000;
-       if (recordNorm.startsWith(normalizedQuery)) score += 500;
-       if (recordNorm.includes(normalizedQuery)) score += 100;
-       
-       const queryWords = normalizedQuery.split(' ').filter(w => w.length > 1);
-       queryWords.forEach(word => {
-         if (recordNorm.includes(word)) score += 50;
-         if (record.keywords && record.keywords.some(k => k.startsWith(word))) score += 25;
-       });
-
-       return { ...record, score };
-     });
-
-     filteredResults = scored
-       .filter(record => record.score > 0)
-       .sort((a, b) => b.score - a.score)
-       .slice(0, 100);
-
-     searchCache.set(normalizedQuery, filteredResults);
-     
-     if (searchCache.size > 20) {
-       const firstKey = searchCache.keys().next().value;
-       searchCache.delete(firstKey);
-     }
-
-     renderResults(filteredResults, normalizedQuery);
-   };
-
-   const debounce = (func, delay = 200) => {
+   const debounce = (func, delay = 300) => {
      let timeoutId;
      return (...args) => {
        clearTimeout(timeoutId);
@@ -945,93 +1126,113 @@
      };
    };
 
-   const debouncedSearch = debounce(performSearch, 150);
+   const debouncedSearch = debounce(performSearch, 300);
 
-   // Event handlers
+   // 🔥 EVENT LISTENERS
+
+   // Type selection
+   document.querySelectorAll('input[name="userType"]').forEach(radio => {
+     radio.addEventListener('change', (e) => {
+       selectedType = e.target.value;
+       console.log('Selected type:', selectedType);
+       
+       // Enable search section
+       enableSection(searchSection, true);
+       searchInput.focus();
+       
+       // Reset search
+       searchInput.value = '';
+       selectedRecord = null;
+       dropdownMenu.classList.remove('show');
+       notFoundSection.classList.remove('show');
+       
+       // Reset subsequent sections
+       enableSection(reasonSection, false);
+       enableSection(submitSection, false);
+       selectedReason = null;
+       document.querySelectorAll('.reason-option').forEach(opt => opt.classList.remove('selected'));
+       
+       updatePreview();
+     });
+   });
+
+   // Search input
    searchInput.addEventListener('input', (e) => {
      const query = e.target.value.trim();
-     
-     if (selectedRecord) {
-       const currentFormatted = formatRecord(selectedRecord);
-       if (e.target.value !== currentFormatted) {
-         setSelected(null);
-       }
-     }
-     
-     updatePreview();
+     selectedRecord = null;
      debouncedSearch(query);
+     updatePreview();
    });
 
    searchInput.addEventListener('focus', () => {
-     if (filteredResults.length > 0) {
-       openDropdown();
+     if (dropdownMenu.children.length > 0) {
+       dropdownMenu.classList.add('show');
      }
    });
 
    searchInput.addEventListener('blur', () => {
-     setTimeout(closeDropdown, 150);
+     setTimeout(() => dropdownMenu.classList.remove('show'), 150);
    });
 
-   searchInput.addEventListener('keydown', (e) => {
-     if (!dropdownMenu.classList.contains('show')) return;
+   // Not found checkbox
+   notFoundCheckbox.addEventListener('change', (e) => {
+     isManualEntry = e.target.checked;
      
-     const items = dropdownMenu.querySelectorAll('.menu-item[data-index]');
-     const maxIndex = items.length - 1;
-     
-     switch (e.key) {
-       case 'ArrowDown':
-         e.preventDefault();
-         activeIndex = Math.min(maxIndex, activeIndex + 1);
-         updateActiveItem(items);
-         break;
-       case 'ArrowUp':
-         e.preventDefault();
-         activeIndex = Math.max(0, activeIndex - 1);
-         updateActiveItem(items);
-         break;
-       case 'Enter':
-         e.preventDefault();
-         if (activeIndex >= 0 && activeIndex <= maxIndex) {
-           const record = filteredResults[activeIndex];
-           if (record) selectRecord(record);
-         }
-         break;
-       case 'Escape':
-         closeDropdown();
-         break;
+     if (isManualEntry) {
+       manualInput.classList.add('show');
+       manualInput.focus();
+       selectedRecord = null;
+       enableSection(reasonSection, true);
+     } else {
+       manualInput.classList.remove('show');
+       manualInput.value = '';
+       enableSection(reasonSection, false);
+       selectedReason = null;
+       document.querySelectorAll('.reason-option').forEach(opt => opt.classList.remove('selected'));
      }
+     
+     updatePreview();
    });
 
-   const updateActiveItem = (items) => {
-     items.forEach((item, index) => {
-       item.classList.toggle('active', index === activeIndex);
-       if (index === activeIndex) {
-         item.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
-       }
+   // Manual input
+   manualInput.addEventListener('input', () => {
+     updatePreview();
+   });
+
+   // Reason selection
+   document.querySelectorAll('.reason-option').forEach(option => {
+     option.addEventListener('click', () => {
+       // Remove previous selection
+       document.querySelectorAll('.reason-option').forEach(opt => opt.classList.remove('selected'));
+       
+       // Select current
+       option.classList.add('selected');
+       selectedReason = option.dataset.reason;
+       
+       console.log('Selected reason:', selectedReason);
+       updatePreview();
      });
-   };
+   });
 
-   // 🔥 SUBMIT HANDLER với Pure Form
+   // Submit button
    submitBtn.addEventListener('click', async () => {
-     console.log('🔥 SUBMIT BUTTON CLICKED!');
+     if (isSubmitting) return;
      
-     if (isSubmitting) {
-       console.log('❌ Already submitting, returning');
-       return;
-     }
-     
-     const inputValue = searchInput.value.trim();
-     console.log('📝 Input value:', inputValue);
-     
-     if (!inputValue) {
-       console.log('❌ No input value');
-       showToast('Vui lòng nhập hoặc chọn thông tin', 'error');
-       searchInput.focus();
+     if (!selectedType || !selectedReason) {
+       showToast('Vui lòng hoàn thành tất cả thông tin', 'error');
        return;
      }
 
-     console.log('✅ Starting Pure Form submission...');
-     console.log('📤 Selected record:', selectedRecord);
+     if (!selectedRecord && !isManualEntry) {
+       showToast('Vui lòng chọn người hoặc đánh dấu "Không có trong danh sách"', 'error');
+       return;
+     }
+
+     if (isManualEntry && !manualInput.value.trim()) {
+       showToast('Vui lòng nhập tên', 'error');
+       manualInput.focus();
+       return;
+     }
 
      isSubmitting = true;
      submitBtn.disabled = true;
@@ -1040,124 +1241,93 @@
      showLoading(true);
 
      try {
-       console.log('🚀 Calling Pure Form API...');
-       const result = await SheetsAPI.saveResponse(inputValue, selectedRecord);
-       console.log('📋 Pure Form Result:', result);
+       const checkinData = {
+         userType: selectedType,
+         reason: selectedReason,
+         timestamp: new Date().toISOString()
+       };
+
+       if (selectedRecord) {
+         checkinData.selectedRecord = selectedRecord;
+         checkinData.inputMethod = 'selected';
+       } else if (isManualEntry) {
+         checkinData.manualName = manualInput.value.trim();
+         checkinData.inputMethod = 'manual';
+       }
+
+       console.log('Submitting checkin data:', checkinData);
+       
+       const result = await SheetsAPI.submitCheckin(checkinData);
        
        if (result.success) {
-         showToast('Đã ghi nhận thành công!', 'success');
+         showToast(result.message, 'success');
          
          // Reset form
-         searchInput.value = '';
-         setSelected(null);
-         updatePreview();
-         closeDropdown();
-         performSearch('');
-         
-         setTimeout(() => searchInput.focus(), 500);
+         resetForm();
        } else {
          showToast('Lỗi: ' + (result.error || 'Không xác định'), 'error');
        }
 
      } catch (error) {
-       console.error('💥 Submit error:', error);
+       console.error('Submit error:', error);
        showToast('Lỗi: ' + error.message, 'error');
      } finally {
-       console.log('🏁 Submit process finished');
        isSubmitting = false;
        submitBtn.disabled = false;
-       submitText.textContent = selectedRecord ? 'Xác nhận gửi' : 'Gửi thông tin';
-       submitIcon.textContent = selectedRecord ? '✅' : '📤';
+       submitText.textContent = 'Check-in';
+       submitIcon.textContent = '🚀';
        showLoading(false);
      }
    });
 
-   // 🔥 ENHANCED INITIALIZATION với retry logic
-   const initializeApp = async () => {
-     console.log('🚀 Initializing app...');
-     showLoading(true);
-     badge.textContent = 'Đang tải...';
-
-     let attempts = 0;
-     const maxAttempts = 3;
-
-     while (attempts < maxAttempts) {
-       try {
-         attempts++;
-         console.log(`📡 Attempt ${attempts}/${maxAttempts} to load data`);
-         
-         const data = await SheetsAPI.getData();
-         dataset = Array.isArray(data) ? data : [];
-         
-         showLoading(false);
-         badge.textContent = dataset.length ? `0/${dataset.length}` : 'Không có dữ liệu';
-         
-         performSearch('');
-         updatePreview();
-         
-         if (dataset.length > 0) {
-           showToast(`Đã tải ${dataset.length} bản ghi`, 'success');
-         } else {
-           showToast('Không có dữ liệu trong sheet', 'warning');
-         }
-         
-         searchInput.focus();
-         console.log('✅ App initialized successfully');
-         return; // Success
-
-       } catch (error) {
-         console.error(`❌ Attempt ${attempts} failed:`, error);
-         
-         if (attempts >= maxAttempts) {
-           showLoading(false);
-           badge.textContent = 'Lỗi tải dữ liệu';
-           showToast(`Không thể tải dữ liệu: ${error.message}`, 'error');
-           
-           // Show retry button
-           const retryBtn = document.createElement('button');
-           retryBtn.textContent = '🔄 Thử lại';
-           retryBtn.style.cssText = `
-             position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
-             background: #3b82f6; color: white; border: none; padding: 12px 24px;
-             border-radius: 8px; font-size: 16px; cursor: pointer; z-index: 1000;
-             box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-           `;
-           retryBtn.onclick = () => {
-             document.body.removeChild(retryBtn);
-             initializeApp();
-           };
-           document.body.appendChild(retryBtn);
-         } else {
-           await new Promise(resolve => setTimeout(resolve, 2000 * attempts));
-         }
-       }
-     }
+   // 🔥 RESET FORM
+   const resetForm = () => {
+     // Reset type selection
+     document.querySelectorAll('input[name="userType"]').forEach(radio => radio.checked = false);
+     selectedType = null;
+     
+     // Reset search
+     searchInput.value = '';
+     searchInput.disabled = true;
+     selectedRecord = null;
+     dropdownMenu.classList.remove('show');
+     
+     // Reset not found
+     notFoundSection.classList.remove('show');
+     notFoundCheckbox.checked = false;
+     manualInput.classList.remove('show');
+     manualInput.value = '';
+     isManualEntry = false;
+     
+     // Reset reason
+     document.querySelectorAll('.reason-option').forEach(opt => opt.classList.remove('selected'));
+     selectedReason = null;
+     
+     // Reset sections
+     enableSection(searchSection, false);
+     enableSection(reasonSection, false);
+     enableSection(submitSection, false);
+     
+     // Reset preview
+     previewSection.classList.remove('show');
+     submitBtn.classList.remove('ready');
+     
+     // Clear cache
+     searchCache.clear();
+     badge.textContent = '';
    };
 
-   // PWA behaviors
-   let lastTouchEnd = 0;
-   document.addEventListener('touchend', (e) => {
-     const now = (new Date()).getTime();
-     if (now - lastTouchEnd <= 300) {
-       e.preventDefault();
-     }
-     lastTouchEnd = now;
-   }, false);
-
-   window.addEventListener('orientationchange', () => {
-     if (dropdownMenu.classList.contains('show')) {
-       setTimeout(() => {
-         closeDropdown();
-         openDropdown();
-       }, 100);
-     }
-   });
-
-   document.addEventListener('visibilitychange', () => {
-     if (!document.hidden && searchInput) {
-       setTimeout(() => searchInput.focus(), 100);
-     }
-   });
+   // 🔥 INITIALIZATION
+   const initializeApp = () => {
+     console.log('🚀 Initializing check-in app...');
+     
+     // Set initial state
+     enableSection(searchSection, false);
+     enableSection(reasonSection, false);
+     enableSection(submitSection, false);
+     
+     showToast('Chọn loại người dùng để bắt đầu', 'success');
+   };
 
    // Start app
    if (document.readyState === 'loading') {
@@ -1166,7 +1336,17 @@
      initializeApp();
    }
 
-   // 🔥 Global error handler
+   // PWA behaviors
+   let lastTouchEnd = 0;
+   document.addEventListener('touchend', (e) => {
+     const now = Date.now();
+     if (now - lastTouchEnd <= 300) {
+       e.preventDefault();
+     }
+     lastTouchEnd = now;
+   }, false);
+
+   // Global error handling
    window.addEventListener('error', (event) => {
      console.error('💥 Global error:', event.error);
    });

@@ -982,50 +982,64 @@
 
     // Submit handler
     submitBtn.addEventListener('click', async () => {
-      if (isSubmitting) return;
+  console.log('🔥 SUBMIT BUTTON CLICKED!'); // Debug 1
+  
+  if (isSubmitting) {
+    console.log('❌ Already submitting, returning');
+    return;
+  }
+  
+  const inputValue = searchInput.value.trim();
+  console.log('📝 Input value:', inputValue); // Debug 2
+  
+  if (!inputValue) {
+    console.log('❌ No input value');
+    showToast('Vui lòng nhập hoặc chọn thông tin', 'error');
+    searchInput.focus();
+    return;
+  }
+
+  console.log('✅ Starting submit process...'); // Debug 3
+  console.log('📤 Selected record:', selectedRecord); // Debug 4
+
+  isSubmitting = true;
+  submitBtn.disabled = true;
+  submitText.textContent = 'Đang gửi...';
+  submitIcon.textContent = '⏳';
+  showLoading(true);
+
+  try {
+    console.log('🚀 Calling SheetsAPI.saveResponse...'); // Debug 5
+    const result = await SheetsAPI.saveResponse(inputValue, selectedRecord);
+    console.log('📋 API Result:', result); // Debug 6
+    
+    if (result.success) {
+      showToast('Đã ghi nhận thành công!', 'success');
       
-      const inputValue = searchInput.value.trim();
-      if (!inputValue) {
-        showToast('Vui lòng nhập hoặc chọn thông tin', 'error');
-        searchInput.focus();
-        return;
-      }
+      // Reset form
+      searchInput.value = '';
+      setSelected(null);
+      updatePreview();
+      closeDropdown();
+      performSearch('');
+      
+      setTimeout(() => searchInput.focus(), 500);
+    } else {
+      showToast('Lỗi: ' + (result.error || 'Không xác định'), 'error');
+    }
 
-      isSubmitting = true;
-      submitBtn.disabled = true;
-      submitText.textContent = 'Đang gửi...';
-      submitIcon.textContent = '⏳';
-      showLoading(true);
-
-      try {
-        const result = await SheetsAPI.saveResponse(inputValue, selectedRecord);
-        
-        if (result.success) {
-          showToast('Đã ghi nhận thành công!', 'success');
-          
-          // Reset form
-          searchInput.value = '';
-          setSelected(null);
-          updatePreview();
-          closeDropdown();
-          performSearch('');
-          
-          setTimeout(() => searchInput.focus(), 500);
-        } else {
-          showToast('Lỗi: ' + (result.error || 'Không xác định'), 'error');
-        }
-
-      } catch (error) {
-        console.error('Submit error:', error);
-        showToast('Lỗi: ' + error.message, 'error');
-      } finally {
-        isSubmitting = false;
-        submitBtn.disabled = false;
-        submitText.textContent = selectedRecord ? 'Xác nhận gửi' : 'Gửi thông tin';
-        submitIcon.textContent = selectedRecord ? '✅' : '📤';
-        showLoading(false);
-      }
-    });
+  } catch (error) {
+    console.error('💥 Submit error:', error);
+    showToast('Lỗi: ' + error.message, 'error');
+  } finally {
+    console.log('🏁 Submit process finished'); // Debug 7
+    isSubmitting = false;
+    submitBtn.disabled = false;
+    submitText.textContent = selectedRecord ? 'Xác nhận gửi' : 'Gửi thông tin';
+    submitIcon.textContent = selectedRecord ? '✅' : '📤';
+    showLoading(false);
+  }
+});
 
     // 🔥 ENHANCED INITIALIZATION with retry logic
     const initializeApp = async () => {
